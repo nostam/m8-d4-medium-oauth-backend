@@ -12,10 +12,14 @@ export default class NewStory extends Component {
     headLine: "",
     content: "",
     cover: "",
+    category: {},
   };
   editor = React.createRef();
   handleContent = (content) => {
     this.setState({ content });
+  };
+  handleTopic = (topic) => {
+    this.setState({ category: topic });
   };
   onKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -41,7 +45,6 @@ export default class NewStory extends Component {
         img: avatarURL,
       },
       subHead: "",
-      category: { name: "", img: "https://picsum.photos/200" },
     };
 
     // console.log("payload: ", payload);
@@ -69,7 +72,8 @@ export default class NewStory extends Component {
         <div className="category-container">
           <CategoryPicker
             onChange={(topic) => {
-              console.log(topic);
+              // console.log(topic);
+              this.handleTopic(topic);
             }}
           />
         </div>
@@ -82,7 +86,15 @@ export default class NewStory extends Component {
           className="article-title-input"
           onChange={(e) => this.handleInput(e)}
         />
-
+        {/* <input
+          type="text"
+          name="subHead"
+          value={subHead}
+          onKeyDown={this.onKeyDown}
+          placeholder="Subtitle"
+          className="article-subtitle-input"
+          onChange={(e) => this.handleInput(e)}
+        /> */}
         <ReactQuill
           modules={NewStory.modules}
           formats={NewStory.formats}
@@ -102,7 +114,6 @@ export default class NewStory extends Component {
           placeholder="Cover link e.g : https://picsum.photos/800"
           className="article-cover-input"
         />
-
         <Button
           variant="success"
           className="post-btn"
