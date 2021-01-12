@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ReactQuill from "react-quill";
+import uiavatars from "ui-avatars";
 import { Container } from "react-bootstrap";
 import "react-quill/dist/quill.bubble.css";
 import { Button } from "react-bootstrap";
@@ -28,15 +29,21 @@ export default class NewStory extends Component {
   };
   postArticle = async () => {
     const url = process.env.REACT_APP_API_URL;
+    const avatarURL = uiavatars.generateAvatar({
+      uppercase: true,
+      name: "John Doe",
+      background: "random",
+    });
     const payload = {
       ...this.state,
       author: {
         name: "John Doe",
-        img: "https://eu.ui-avatars.com/api/?name=John+Doe&background=random",
+        img: avatarURL,
       },
       subHead: "",
       category: { name: "", img: "https://picsum.photos/200" },
     };
+
     // console.log("payload: ", payload);
     try {
       let res = await fetch(`${url}/articles`, {
