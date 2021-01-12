@@ -22,8 +22,11 @@ export default class PeopleList extends React.Component {
 
   render = () => (
     <div className="people-container">
-      {this.state.people.map((person) => (
-        <Card style={{ border: "none", margin: "2px", position: "relative" }}>
+      {this.state.people.map((person, index) => (
+        <Card
+          style={{ border: "none", margin: "2px", position: "relative" }}
+          key={`person${index}`}
+        >
           <Card.Img
             variant="top"
             src={person.picture.large}

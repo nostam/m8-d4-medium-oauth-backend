@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { IoBookmarksOutline } from "react-icons/io5";
+import uniqid from "uniqid";
 import ArticleListItem from "../../components/ArticleListItem/ArticleListItem";
 import Footer from "../../components/Footer/Footer";
 import PeopleList from "../../components/PeopleList/PeopleList";
@@ -65,7 +66,7 @@ export default class Home extends Component {
                       articleImg={"left"}
                       headingFont={"small"}
                       article={article}
-                      key={article._id}
+                      key={uniqid()}
                     />
                   ))}
                 </Col>
@@ -84,7 +85,7 @@ export default class Home extends Component {
                       headingFont={"large"}
                       subheading
                       article={article}
-                      key={article._id}
+                      key={uniqid()}
                     />
                   ))}
                 </Col>
@@ -101,7 +102,7 @@ export default class Home extends Component {
                       <ArticleListItem
                         headingFont={"small"}
                         article={article}
-                        key={article._id}
+                        key={uniqid()}
                       />
                     ))}
                   </div>

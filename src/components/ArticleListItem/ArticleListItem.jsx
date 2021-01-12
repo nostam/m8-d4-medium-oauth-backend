@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import ArticleItemDetails from "../ArticleItemDetails/ArticleItemDetails";
 import "./styles.scss";
 class ArticleListItem extends React.Component {
