@@ -5,7 +5,7 @@ import ArticleListItem from "../../components/ArticleListItem/ArticleListItem";
 import Footer from "../../components/Footer/Footer";
 import PeopleList from "../../components/PeopleList/PeopleList";
 import TopicsToFollow from "../../components/TopicsToFollow/TopicsToFollow";
-import articles from "./articles.json";
+// import articles from "./articles.json";
 import "./styles.scss";
 
 export default class Home extends Component {
