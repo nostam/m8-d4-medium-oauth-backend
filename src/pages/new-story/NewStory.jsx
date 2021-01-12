@@ -10,7 +10,7 @@ export default class NewStory extends Component {
   state = {
     headLine: "",
     content: "",
-    coverUrl: "",
+    cover: "",
   };
   editor = React.createRef();
   handleContent = (content) => {
@@ -34,11 +34,17 @@ export default class NewStory extends Component {
         name: "John Doe",
         img: "https://eu.ui-avatars.com/api/?name=John+Doe&background=random",
       },
+      subHead: "",
+      category: { name: "", img: "https://picsum.photos/200" },
     };
+    // console.log("payload: ", payload);
     try {
       let res = await fetch(`${url}/articles`, {
         method: "POST",
-        // TODO adopt new format
+        headers: {
+          "content-type": "application/json",
+          origin: process.env.REACT_APP_ORIGIN,
+        },
         body: JSON.stringify(payload),
       });
       if (res.ok) {
@@ -50,7 +56,7 @@ export default class NewStory extends Component {
     }
   };
   render() {
-    const { headLine, content, coverUrl } = this.state;
+    const { headLine, content, cover } = this.state;
     return (
       <Container className="new-story-container" expand="md">
         <div className="category-container">
@@ -82,8 +88,8 @@ export default class NewStory extends Component {
         />
         <input
           type="text"
-          name="coverUrl"
-          value={coverUrl}
+          name="cover"
+          value={cover}
           onKeyDown={this.onKeyDown}
           onChange={(e) => this.handleInput(e)}
           placeholder="Cover link e.g : https://picsum.photos/800"
