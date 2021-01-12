@@ -8,27 +8,38 @@ import CategoryPicker from "../../components/CategoryPicker";
 
 export default class NewStory extends Component {
   state = {
-    html: "",
+    headLine: "",
+    content: "",
+    coverUrl: "",
   };
   editor = React.createRef();
-  onChange = (html) => {
-    this.setState({ html });
-    console.log(html);
+  handleContent = (content) => {
+    this.setState({ content });
   };
   onKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       this.editor && this.editor.current.focus();
+      console.log(this.editor);
     }
   };
-
+  handleInput = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
   postArticle = async () => {
     const url = process.env.REACT_APP_API_URL;
+    const payload = {
+      ...this.state,
+      author: {
+        name: "John Doe",
+        img: "https://eu.ui-avatars.com/api/?name=John+Doe&background=random",
+      },
+    };
     try {
       let res = await fetch(`${url}/articles`, {
         method: "POST",
         // TODO adopt new format
-        body: JSON.stringify(this.state.html),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         const response = await res.json();
@@ -39,7 +50,7 @@ export default class NewStory extends Component {
     }
   };
   render() {
-    const { html } = this.state;
+    const { headLine, content, coverUrl } = this.state;
     return (
       <Container className="new-story-container" expand="md">
         <div className="category-container">
@@ -50,9 +61,13 @@ export default class NewStory extends Component {
           />
         </div>
         <input
+          type="text"
+          name="headLine"
+          value={headLine}
           onKeyDown={this.onKeyDown}
           placeholder="Title"
           className="article-title-input"
+          onChange={(e) => this.handleInput(e)}
         />
 
         <ReactQuill
@@ -60,17 +75,26 @@ export default class NewStory extends Component {
           formats={NewStory.formats}
           ref={this.editor}
           theme="bubble"
-          value={html}
-          onChange={this.onChange}
+          name="content"
+          value={content}
+          onChange={this.handleContent}
           placeholder="Tell your story..."
         />
         <input
+          type="text"
+          name="coverUrl"
+          value={coverUrl}
           onKeyDown={this.onKeyDown}
+          onChange={(e) => this.handleInput(e)}
           placeholder="Cover link e.g : https://picsum.photos/800"
           className="article-cover-input"
         />
 
-        <Button variant="success" className="post-btn">
+        <Button
+          variant="success"
+          className="post-btn"
+          onClick={() => this.postArticle()}
+        >
           Post
         </Button>
       </Container>
