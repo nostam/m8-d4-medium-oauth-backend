@@ -12,8 +12,8 @@ export default class NewStory extends Component {
   };
   editor = React.createRef();
   onChange = (html) => {
-    this.setState({ html })
-    console.log(html)
+    this.setState({ html });
+    console.log(html);
   };
   onKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -21,12 +21,33 @@ export default class NewStory extends Component {
       this.editor && this.editor.current.focus();
     }
   };
+
+  postArticle = async () => {
+    const url = process.env.REACT_APP_API_URL;
+    try {
+      let res = await fetch(`${url}/articles`, {
+        method: "POST",
+        // TODO adopt new format
+        body: JSON.stringify(this.state.html),
+      });
+      if (res.ok) {
+        const response = await res.json();
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   render() {
     const { html } = this.state;
     return (
       <Container className="new-story-container" expand="md">
         <div className="category-container">
-        <CategoryPicker onChange={(topic)=>{console.log(topic)}} />
+          <CategoryPicker
+            onChange={(topic) => {
+              console.log(topic);
+            }}
+          />
         </div>
         <input
           onKeyDown={this.onKeyDown}
@@ -48,7 +69,7 @@ export default class NewStory extends Component {
           placeholder="Cover link e.g : https://picsum.photos/800"
           className="article-cover-input"
         />
-       
+
         <Button variant="success" className="post-btn">
           Post
         </Button>
