@@ -11,16 +11,22 @@ class Read extends Component {
   state = {
     article: {},
     loading: true,
+    reviews: [],
   };
 
   getArticle = async (id) => {
     const url = process.env.REACT_APP_API_URL;
     try {
       let res = await fetch(`${url}/articles/${id}`);
+      let reviews = await fetch(`${url}/articles/${id}/reviews`);
       if (res.ok) {
         const data = await res.json();
         setTimeout(() => this.setState({ article: data, loading: false }), 500);
         // console.log(this.state.article);
+      }
+      if (reviews.ok) {
+        const data = await reviews.json();
+        this.setState({ reviews: data });
       }
     } catch (error) {
       console.log(error);
@@ -53,8 +59,8 @@ class Read extends Component {
               <Col>
                 {article.author.name}
                 <p>
-                  {new Date(article.createdAt).toDateString()} ·{" "}
-                  {Math.floor(article.content.length / 60)} min read
+                  {new Date(article.updatedAt).toDateString()} ·{" "}
+                  {Math.floor(article.content.length / 600)} min read
                 </p>
               </Col>
               <Col>
@@ -73,11 +79,6 @@ class Read extends Component {
                 </div>
               </Col>
             </Row>
-            <p>{article.content}</p>
-            <p>{article.content}</p>
-            <p>{article.content}</p>
-            <p>{article.content}</p>
-            <p>{article.content}</p>
             <p>{article.content}</p>
             <Reactions />
           </>

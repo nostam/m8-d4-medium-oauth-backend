@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Row, Spinner, Button } from "react-bootstrap";
 import { IoBookmarksOutline } from "react-icons/io5";
 import uniqid from "uniqid";
 import ArticleListItem from "../../components/ArticleListItem/ArticleListItem";
@@ -11,18 +11,19 @@ import "./styles.scss";
 export default class Home extends Component {
   state = {
     articles: [],
+    restOfArticles: [],
     loading: true,
+    links: {},
   };
-
+  url = process.env.REACT_APP_API_URL;
   getArticles = async () => {
-    const url = process.env.REACT_APP_API_URL;
     try {
-      let res = await fetch(`${url}/articles`);
+      let res = await fetch(`${this.url}/articles`);
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         setTimeout(
-          () => this.setState({ articles: data, loading: false }),
+          () => this.setState({ articles: data.articles, loading: false }),
           500
         );
       }
@@ -30,8 +31,25 @@ export default class Home extends Component {
       console.log(error);
     }
   };
+  getRestOfArticles = async (url = `${this.url}/articles?limit=5&offset=5`) => {
+    try {
+      let res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        this.setState({ restOfArticles: data.articles, links: data.links });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  handlePagination = (e) => {
+    console.log(this.state.links);
+    const suffix = this.state.links[e.target.name];
+    this.getRestOfArticles(`${this.url}${suffix}`);
+  };
   componentDidMount = () => {
     this.getArticles();
+    this.getRestOfArticles();
   };
   render() {
     return (
@@ -79,7 +97,7 @@ export default class Home extends Component {
               </Row>
               <Row className={"py-4 mt-4"}>
                 <Col className={"col-lg-8 pr-5 pl-2"}>
-                  {this.state.articles.slice(6).map((article) => (
+                  {this.state.restOfArticles.map((article) => (
                     <ArticleListItem
                       articleImg={"left"}
                       headingFont={"large"}
@@ -88,6 +106,26 @@ export default class Home extends Component {
                       key={uniqid()}
                     />
                   ))}
+                  {Object.keys(this.state.links) !== 0 && (
+                    <Row>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        name="prev"
+                        onClick={(e) => this.handlePagination(e)}
+                      >
+                        Prev
+                      </Button>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        name="next"
+                        onClick={(e) => this.handlePagination(e)}
+                      >
+                        Next
+                      </Button>
+                    </Row>
+                  )}
                 </Col>
                 <Col className={"col-lg-4 "}>
                   <div

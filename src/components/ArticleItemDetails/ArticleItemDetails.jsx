@@ -3,6 +3,7 @@ import "./styles.scss";
 class ArticleItemDetails extends React.Component {
   render() {
     const { article, headingFont, subheading } = this.props;
+    const articleLink = `/read/${article._id}`;
     return (
       <div className={"pr-3"}>
         <div className={"d-flex align-center mb-2"}>
@@ -15,12 +16,12 @@ class ArticleItemDetails extends React.Component {
           />
 
           <span className={"author"}>
-            <a href={`/read/${article._id}`}>
+            <a href={"/"}>
               <b>{article.author.name} </b> in <b>Better Advice</b>
             </a>
           </span>
         </div>
-        <a href={`/read/${article._id}`}>
+        <a href={articleLink}>
           <span
             className={"heading"}
             style={{
@@ -35,14 +36,14 @@ class ArticleItemDetails extends React.Component {
         {subheading && (
           <div className={"subheading"}>
             <p>
-              <a href="/">{article.subHead}</a>
+              <a href={articleLink}>{article.subHead}</a>
             </p>
           </div>
         )}
         <div className={"d-flex align-baseline justify-between mt-2"}>
           <h4 className={"date"}>
             <div className={"d-flex"}>
-              <span>Oct 16, 2020</span>
+              <span>{new Date(article.updatedAt).toDateString()}</span>
               <div>
                 <span>
                   <span>·</span>
@@ -50,7 +51,7 @@ class ArticleItemDetails extends React.Component {
               </div>
 
               <span>
-                <span>4 min read</span>
+                <span>{Math.floor(article.content.length / 600)} min read</span>
               </span>
             </div>
           </h4>
