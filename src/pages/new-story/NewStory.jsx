@@ -7,6 +7,8 @@ import "react-quill/dist/quill.bubble.css";
 import { Button, Alert } from "react-bootstrap";
 import "./styles.scss";
 import CategoryPicker from "../../components/CategoryPicker";
+import axios from "axios";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 export default class NewStory extends Component {
   state = {
@@ -18,6 +20,7 @@ export default class NewStory extends Component {
     errMsg: "",
   };
   editor = React.createRef();
+  url = process.env.REACT_APP_API_URL;
   handleContent = (content) => {
     this.setState({ content });
   };
@@ -68,6 +71,22 @@ export default class NewStory extends Component {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  refreshAuthLogic = (failedRequest) =>
+    axios.post(`${this.url}/users/refeshtoken`).then((tokenRefreshResponse) => {
+      localStorage.setItem("token", tokenRefreshResponse.data.token);
+      failedRequest.response.config.headers["Authorization"] =
+        "Bearer " + tokenRefreshResponse.data.token;
+      return Promise.resolve();
+    });
+  componentDidMount = async () => {
+    const user = await axios({
+      method: "GET",
+      url: `${this.url}/users/me`,
+      Authorization: "",
+    });
+    this.setState({ user });
   };
   render() {
     const { headLine, content, cover, err, errMsg } = this.state;
