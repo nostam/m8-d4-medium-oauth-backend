@@ -6,30 +6,28 @@ import "./index.scss";
 import { IoLogoTwitter, IoLogoLinkedin, IoLogoFacebook } from "react-icons/io";
 import { IoBookmarkOutline } from "react-icons/io5";
 import Reactions from "../../components/Reactions/Reactions";
-
 class Read extends Component {
   state = {
     article: {},
     loading: true,
     reviews: [],
+    errMsg: "",
   };
 
   getArticle = async (id) => {
     const url = process.env.REACT_APP_API_URL;
     try {
       let res = await fetch(`${url}/articles/${id}`);
-      let reviews = await fetch(`${url}/articles/${id}/reviews`);
-      if (res.ok) {
-        const data = await res.json();
-        setTimeout(() => this.setState({ article: data, loading: false }), 500);
-        // console.log(this.state.article);
+      // let reviews = await fetch(`${url}/articles/${id}/reviews`);
+      if (!res.ok) {
+        const { errors } = await res.json();
+        throw new Error(errors);
       }
-      if (reviews.ok) {
-        const data = await reviews.json();
-        this.setState({ reviews: data });
-      }
+      const data = await res.json();
+      setTimeout(() => this.setState({ article: data, loading: false }), 500);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      this.setState({ errMsg: error.message });
     }
   };
   componentDidMount = () => {

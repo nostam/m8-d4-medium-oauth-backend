@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import ReactQuill from "react-quill";
 import uiavatars from "ui-avatars";
+import { giveMeAnAvatar } from "give-me-an-avatar";
 import { Container } from "react-bootstrap";
 import "react-quill/dist/quill.bubble.css";
-import { Button } from "react-bootstrap";
+import { Button, Alert } from "react-bootstrap";
 import "./styles.scss";
 import CategoryPicker from "../../components/CategoryPicker";
 
@@ -13,6 +14,8 @@ export default class NewStory extends Component {
     content: "",
     cover: "",
     category: {},
+    err: false,
+    errMsg: "",
   };
   editor = React.createRef();
   handleContent = (content) => {
@@ -33,11 +36,7 @@ export default class NewStory extends Component {
   };
   postArticle = async () => {
     const url = process.env.REACT_APP_API_URL;
-    const avatarURL = uiavatars.generateAvatar({
-      uppercase: true,
-      name: "John Doe",
-      background: "random",
-    });
+    const avatarURL = await giveMeAnAvatar({ Name: "John Doe", Size: "48" });
     const payload = {
       ...this.state,
       author: {
@@ -46,9 +45,12 @@ export default class NewStory extends Component {
       },
       subHead: "",
     };
-
     // console.log("payload: ", payload);
     try {
+      if (Object.keys(payload.category === 0)) {
+        this.setState({ err: true, errMsg: "Please select a category" });
+        throw new Error("Category is empty");
+      }
       let res = await fetch(`${url}/articles`, {
         method: "POST",
         headers: {
@@ -60,15 +62,26 @@ export default class NewStory extends Component {
       if (res.ok) {
         const response = await res.json();
         console.log(response);
+        this.setState({ err: false, errMSg: "" });
+        this.props.history.push("/");
       }
     } catch (error) {
       console.log(error);
     }
   };
   render() {
-    const { headLine, content, cover } = this.state;
+    const { headLine, content, cover, err, errMsg } = this.state;
     return (
       <Container className="new-story-container" expand="md">
+        {err && (
+          <Alert
+            dismissible
+            variant="warning"
+            onClose={() => this.setState({ err: false, errMsg: "" })}
+          >
+            {errMsg}
+          </Alert>
+        )}
         <div className="category-container">
           <CategoryPicker
             onChange={(topic) => {

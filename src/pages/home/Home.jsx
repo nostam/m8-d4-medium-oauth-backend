@@ -107,7 +107,7 @@ export default class Home extends Component {
                     />
                   ))}
                   {Object.keys(this.state.links) !== 0 && (
-                    <Row>
+                    <Row className="d-flex justify-content-center">
                       <Button
                         variant="outline-primary"
                         size="sm"

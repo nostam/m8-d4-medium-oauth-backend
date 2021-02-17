@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.6.0",
     "bootstrap": "^4.5.3",
     "dotenv": "^8.2.0",
+    "give-me-an-avatar": "^1.0.0",
     "node-sass": "^4.14.1",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
