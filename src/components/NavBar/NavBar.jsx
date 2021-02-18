@@ -23,24 +23,26 @@ export default class NavBar extends Component {
   state = { user: {} };
   handleLoginStatus = async (option = "login") => {
     try {
-      let token = localStorage.getItem("token");
-      let refreshToken = localStorage.getItem("refreshToken");
-      let headers = { Authorization: "Bearer " + token };
+      // let token = localStorage.getItem("token");
+      // let refreshToken = localStorage.getItem("refreshToken");
+      // let headers = { Authorization: "Bearer " + token };
+      const headers = { "Content-Type": "application/json" };
       const url = process.env.REACT_APP_API_URL;
       const refreshAuthLogic = (failedRequest) =>
         axios({
           url: `${url}/users/refreshToken`,
           method: "POST",
           headers,
-          data: { refreshToken },
+          // data: { refreshToken },
+          withCredentials: true,
         }).then((tokenRefreshResponse) => {
-          localStorage.setItem("token", tokenRefreshResponse.data.token);
-          localStorage.setItem(
-            "refreshToken",
-            tokenRefreshResponse.data.refreshToken
-          );
-          failedRequest.response.config.headers["Authorization"] =
-            "Bearer " + tokenRefreshResponse.data.token;
+          // localStorage.setItem("token", tokenRefreshResponse.data.token);
+          // localStorage.setItem(
+          //   "refreshToken",
+          //   tokenRefreshResponse.data.refreshToken
+          // );
+          // failedRequest.response.config.headers["Authorization"] =
+          //   "Bearer " + tokenRefreshResponse.data.token;
           return Promise.resolve();
         });
 
@@ -51,7 +53,8 @@ export default class NavBar extends Component {
           method: "POST",
           url: `${url}/users/${option}`,
           headers,
-          data: { refreshToken },
+          // data: { refreshToken },
+          withCredentials: true,
         });
         console.log(option, res.ok);
       } else {
@@ -59,6 +62,7 @@ export default class NavBar extends Component {
           method: "GET",
           url: `${url}/users/me`,
           headers,
+          withCredentials: true,
         });
         this.setState({ user: data.username });
         console.log(this.state.user);
@@ -87,7 +91,7 @@ export default class NavBar extends Component {
     </Popover>
   );
   componentDidMount = () => {
-    localStorage.getItem("token") && this.handleLoginStatus();
+    this.handleLoginStatus();
   };
   render() {
     return (

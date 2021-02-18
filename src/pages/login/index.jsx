@@ -1,18 +1,17 @@
 import React, { Component } from "react";
 import { Row, Col, Form, Button, Container, Badge } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
-
 import "./styles.css";
 class Login extends Component {
   state = {
     user: "",
     hidden: true,
   };
-  url = `${process.env.REACT_APP_API_URL}/users/login`;
+  url = `${process.env.REACT_APP_API_URL}/users`;
   submitData = async (e) => {
     e.preventDefault();
     try {
-      let res = await fetch(this.url, {
+      let res = await fetch(`${this.url}/login`, {
         method: "POST",
         body: JSON.stringify(this.state.user),
         headers: {
@@ -20,9 +19,9 @@ class Login extends Component {
         },
       });
       if (res.ok) {
-        const { token, refreshToken } = await res.json();
-        localStorage.setItem("token", token);
-        localStorage.setItem("refreshToken", refreshToken);
+        // const { token, refreshToken } = await res.json();
+        // localStorage.setItem("token", token);
+        // localStorage.setItem("refreshToken", refreshToken);
         this.props.history.push("/");
       } else {
         const { message } = await res.json();
@@ -49,18 +48,11 @@ class Login extends Component {
       <div className="loginDiv">
         <Container>
           <Col className="loginCol mt-5">
-            <div className={this.props.dontShowLogo ? "" : "shadowBox"}>
+            <div className="shadowBox">
               <div className="mb-3">
-                {this.props.dontShowLogo ? (
-                  <h1 className="wlcT">Welcome to Medium</h1>
-                ) : (
-                  <h2>Sign in</h2>
-                )}
-                {this.props.dontShowLogo ? (
-                  ""
-                ) : (
-                  <span>Stay updated on your world</span>
-                )}
+                <h1 className="wlcT">Welcome to Medium</h1>
+                <h2>Sign in</h2>
+                <span>Stay updated on your world</span>
               </div>
               <Form onSubmit={(e) => this.submitData(e)}>
                 <Form.Group>
@@ -107,17 +99,19 @@ class Login extends Component {
               <a className="forgetPwd" href="/">
                 Forget your password?
               </a>
+              <a href={`${this.url}/googleLogin`}>
+                <Button className="w-100 mt-5" variant="outline-info">
+                  Sign in with Google
+                </Button>
+              </a>
             </div>
-            {this.props.dontShowLogo ? (
-              ""
-            ) : (
-              <Row className="d-flex justify-content-around mt-5 mx-auto bg-transparent">
-                New to Medium?{" "}
-                <Link className="ml-1" to="/register">
-                  Join now
-                </Link>
-              </Row>
-            )}
+
+            <Row className="d-flex justify-content-around mt-5 mx-auto bg-transparent">
+              New to Medium?{" "}
+              <Link className="ml-1" to="/register">
+                Join now
+              </Link>
+            </Row>
           </Col>
         </Container>
       </div>
