@@ -18,6 +18,8 @@ class Login extends Component {
           "Content-Type": "application/json",
         },
         credentials: "include", // cookie
+        SameSite: "none",
+        secure: true,
       });
       if (res.ok) {
         // const { token, refreshToken } = await res.json();
