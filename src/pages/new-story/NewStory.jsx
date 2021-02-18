@@ -81,12 +81,12 @@ export default class NewStory extends Component {
       return Promise.resolve();
     });
   componentDidMount = async () => {
-    const user = await axios({
-      method: "GET",
-      url: `${this.url}/users/me`,
-      Authorization: "",
-    });
-    this.setState({ user });
+    // const user = await axios({
+    //   method: "GET",
+    //   url: `${this.url}/users/me`,
+    //   Authorization: "Bearer",
+    // });
+    // this.setState({ user });
   };
   render() {
     const { headLine, content, cover, err, errMsg } = this.state;
