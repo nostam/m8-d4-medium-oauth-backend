@@ -26,7 +26,9 @@ export default class NavBar extends Component {
       // let token = localStorage.getItem("token");
       // let refreshToken = localStorage.getItem("refreshToken");
       // let headers = { Authorization: "Bearer " + token };
-      const headers = { "Content-Type": "application/json" };
+      const headers = {
+        "Content-Type": "application/json",
+      };
       const url = process.env.REACT_APP_API_URL;
       const refreshAuthLogic = (failedRequest) =>
         axios({

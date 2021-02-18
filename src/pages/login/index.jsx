@@ -17,6 +17,7 @@ class Login extends Component {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include", // cookie
       });
       if (res.ok) {
         // const { token, refreshToken } = await res.json();
